@@ -1,7 +1,7 @@
 version: '3.0'
 
 services:
-  database:
+  db:
     container_name: db
     image: postgres:latest
     restart: always
@@ -13,3 +13,17 @@ services:
       - POSTGRES_DB=library_db
     ports:
       - 5432:5432
+    
+  backend:
+    container_name: backend
+    build:
+      context: library_back/
+      dockerfile: Dockerfile
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./library_back:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
