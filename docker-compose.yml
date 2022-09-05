@@ -39,4 +39,17 @@ services:
       - backend
       - db
     command: npm start
+
+  nginx:
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - backend
+      - frontend
+
     
