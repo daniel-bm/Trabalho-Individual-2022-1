@@ -4,7 +4,6 @@ services:
   db:
     container_name: db
     image: postgres:latest
-    restart: always
     volumes:
       - /var/lib/postgresql/data
     environment:
@@ -19,11 +18,25 @@ services:
     build:
       context: library_back/
       dockerfile: Dockerfile
-    restart: always
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./library_back:/code
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
       - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: library_front/
+      dockerfile: Dockerfile
+    volumes:
+      - ./library_front:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+      - db
+    command: npm start
+    
